@@ -21,7 +21,7 @@ app.get("/clientId/new", function(req, res) {
 });
 
 function getNewClientId() {
-    return idCount++;
+  return idCount++;
 }
 
 app.get("/", function(req, res) {
@@ -43,6 +43,24 @@ app.get("/msg/nber", function(req, res) {
 
 app.get("/msg/getAll", function(req, res) {
   res.json(allMsgs);
+});
+
+// Delete a specific message by its index
+app.get("/msg/del/:messageNumber", function(req, res) {
+  var messageNumber = parseInt(req.params.messageNumber);
+  if (!isNaN(messageNumber) && messageNumber >= 0 && messageNumber < allMsgs.length) {
+    // Remove the message at the specified index
+    allMsgs.splice(messageNumber, 1);
+    res.json({ "code": 1, "message": "Message deleted successfully" });
+  } else {
+    res.json({ "code": 0, "error": "Invalid message number" });
+  }
+});
+
+// Delete all messages
+app.get("/msg/delAll", function(req, res) {
+  allMsgs = []; // Empty the array
+  res.json({ "code": 1, "message": "All messages deleted successfully" });
 });
 
 app.get("/msg/post/:newMessage/:clientId", function(req, res) {
